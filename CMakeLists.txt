@@ -81,6 +81,8 @@ OPTION ( ASSIMP_COVERALLS
    OFF
 )
 
+option(ASSIMP_NO_PACK "Do not pack structs" ON)
+
 IF(MSVC)
   set (CMAKE_PREFIX_PATH "D:\\libs\\devil")
   OPTION( ASSIMP_INSTALL_PDB
@@ -133,6 +135,10 @@ IF(ASSIMP_DOUBLE_PRECISION)
   ADD_DEFINITIONS(-DASSIMP_DOUBLE_PRECISION)
 ENDIF(ASSIMP_DOUBLE_PRECISION)
 
+IF(ASSIMP_NO_PACK)
+  ADD_DEFINITIONS(-DASSIMP_NO_PACK)
+ENDIF(ASSIMP_NO_PACK)
+
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/revision.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/revision.h
@@ -168,7 +174,8 @@ IF((CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX) AND NOT CMAKE_COMPILER_
      SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
   ENDIF()
   # hide all not-exported symbols
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fvisibility=hidden -Wall -std=c++0x" )
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -w -fvisibility=hidden -std=c++0x" )
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
 ELSEIF(MSVC)
   # enable multi-core compilation with MSVC
   add_compile_options(/MP)
